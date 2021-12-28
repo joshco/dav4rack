@@ -174,6 +174,7 @@ module DAV4Rack
 
     # Return response to PROPFIND
     def propfind
+      windows_quirks_empty_propfinds = @options[:windows_quirks]==true
       unless(resource.exist?)
         NotFound
       else
@@ -181,7 +182,7 @@ module DAV4Rack
           properties = resource.properties
         else
           check = request_document.xpath("//#{ns}propfind")
-          if(true || check && !check.empty?)
+          if( windows_quirks_empty_propfinds || check && !check.empty?)
             properties = request_document.xpath(
               "//#{ns}propfind/#{ns}prop"
             ).children.find_all{ |item|

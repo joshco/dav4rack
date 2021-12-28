@@ -20,13 +20,17 @@ module DAV4Rack
         request = Rack::Request.new(env)
         response = Rack::Response.new
 
-        Logger.info "Processing WebDAV request: #{request.path} (for #{request.ip} at #{Time.now}) [#{request.request_method}]"
+        windows_quirks_anonymous_options = (request.request_method == 'OPTIONS' &&  @options[:windows_quirks] == true )
+
+        Logger.info "Processing WebDAV request: #{request.path} (for #{request.ip} at #{Time.now}) [#{request.request_method}] #{windows_quirks_anonymous_options ? '(Windows Quirk Anonymous OPTIONS)' : ''}"
         
         controller = nil
         begin
           controller_class = @options[:controller_class] || Controller
           controller = controller_class.new(request, response, @options.dup)
-          controller.authenticate
+
+          controller.authenticate unless windows_quirks_anonymous_options
+
           res = controller.send(request.request_method.downcase)
           response.status = res.code if res.respond_to?(:code)
         rescue HTTPStatus::Unauthorized => status

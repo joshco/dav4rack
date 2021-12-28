@@ -286,6 +286,15 @@ Something special to notice in the last example is the DAV_ prefix on authentica
 any callbacks being applied to the given method. This allows us to provide a public method that the callback can access on the resource
 without getting stuck in a loop.
 
+=== Windows Quirks
+
+  mount DAV4Rack::Handler.new(
+    :root => WEBDAV_ROOT, :root_uri_path => '/webdav',
+    :resource_class => ::DAV4Rack::FileResource,
+    log_to: [Rails.logger, Logger::DEBUG],
+    windows_quirks: true  ), :at => '/webdav'
+
+
 == Software using DAV4Rack!
 
 * {meishi}[https://github.com/inferiorhumanorgans/meishi] - Lightweight CardDAV implementation in Rails
