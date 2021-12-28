@@ -181,7 +181,7 @@ module DAV4Rack
           properties = resource.properties
         else
           check = request_document.xpath("//#{ns}propfind")
-          if(check && !check.empty?)
+          if(true || check && !check.empty?)
             properties = request_document.xpath(
               "//#{ns}propfind/#{ns}prop"
             ).children.find_all{ |item|
